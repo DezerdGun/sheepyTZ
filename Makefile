@@ -24,8 +24,8 @@ migrate:
 seed:
 	docker compose exec app php artisan db:seed
 
-swagger:
-	docker compose exec app php artisan l5-swagger:generate
+clear:
+	php artisan config:clear && php artisan cache:clear && CACHE_DRIVER=file php artisan l5-swagger:generate
 
 fresh:
 	docker compose exec app php artisan migrate:fresh --seed

@@ -8,4 +8,4 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // Route::get('/available-cars', [CarController::class, 'available']);
-Route::get('/ping', PingController::class);
+// Route::get('/ping', PingController::class);

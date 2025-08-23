@@ -3,6 +3,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     schema="Category",
+ *     type="object",
+ *     title="Category",
+ *     required={"name"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="Комфорт")
+ * )
+ */
 class Category extends Model
 {
     protected $fillable = ['name'];

@@ -56,9 +56,11 @@ services:
     environment:
       SWAGGER_JSON: /api-docs/openapi.json
     volumes:
-      - ./docs:/api-docs
+      - ./storage/api-docs:/api-docs
     networks:
       - laravel
+
+      
 
 volumes:
   postgres_data:
