@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <div class="mb-4">
+    <div class="mb-4 mt-3">
       <button id="btn-refresh" class="btn btn-primary">Показать доступные</button>
     </div>
 

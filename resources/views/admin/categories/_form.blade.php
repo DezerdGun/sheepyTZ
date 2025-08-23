@@ -10,8 +10,7 @@
     @error('name')<div class="text-danger small">{{ $message }}</div>@enderror
   </div>
 
-  <div class="mb-3">
-    <button class="btn btn-primary">Сохранить</button>
-    <a href="{{ route('admin.categories.index') }}" class="btn btn-link">Отмена</a>
-  </div>
+</form>
+
+@include('admin._form_actions', ['cancelUrl' => route('admin.categories.index')])
 </form>

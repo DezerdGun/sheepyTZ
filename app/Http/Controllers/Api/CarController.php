@@ -15,26 +15,40 @@ class CarController extends Controller
      *     summary="Получить доступные автомобили",
      *     description="Возвращает список машин, доступных текущему пользователю для поездки",
      *     tags={"Cars"},
-     *     @OA\Parameter(
-     *         name="model",
-     *         in="query",
-     *         description="Фильтр по модели авто",
-     *         required=false,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="category",
-     *         in="query",
-     *         description="Фильтр по категории комфорта",
-     *         required=false,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Список доступных автомобилей",
-     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Car"))
-     *     ),
-     *     security={{"bearerAuth": {}}}
+    *     @OA\Parameter(
+    *         name="model",
+    *         in="query",
+    *         description="Фильтр по модели авто",
+    *         required=false,
+    *         @OA\Schema(type="string")
+    *     ),
+    *     @OA\Parameter(
+    *         name="category",
+    *         in="query",
+    *         description="Фильтр по категории комфорта",
+    *         required=false,
+    *         @OA\Schema(type="string")
+    *     ),
+    *     @OA\Parameter(
+    *         name="start_time",
+    *         in="query",
+    *         description="Запланированное начало поездки (ISO 8601, например 2025-08-21T09:00:00)",
+    *         required=false,
+    *         @OA\Schema(type="string", format="date-time")
+    *     ),
+    *     @OA\Parameter(
+    *         name="end_time",
+    *         in="query",
+    *         description="Запланированный конец поездки (ISO 8601)",
+    *         required=false,
+    *         @OA\Schema(type="string", format="date-time")
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Список доступных автомобилей",
+    *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Car"))
+    *     ),
+    *     security={{"bearerAuth": {}}}
      * )
      */
     public function index(Request $request)

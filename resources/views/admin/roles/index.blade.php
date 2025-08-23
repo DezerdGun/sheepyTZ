@@ -9,26 +9,30 @@
       <a href="{{ route('admin.roles.create') }}" class="btn btn-success">Добавить</a>
     </div>
 
-    <table class="table table-striped">
-      <thead><tr><th>ID</th><th>Название</th><th></th></tr></thead>
-      <tbody>
-        @foreach($items as $it)
-          <tr>
-            <td>{{ $it->id }}</td>
-            <td>{{ $it->name }}</td>
-            <td class="text-end">
-              <a href="{{ route('admin.roles.edit', $it) }}" class="btn btn-sm btn-primary">Ред.</a>
-              <form action="{{ route('admin.roles.destroy', $it) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Удалить?')">
-                @csrf
-                @method('DELETE')
-                <button class="btn btn-sm btn-danger">Удал.</button>
-              </form>
-            </td>
-          </tr>
-        @endforeach
-      </tbody>
-    </table>
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+          <thead><tr><th>ID</th><th>Название</th><th class="text-end">Действия</th></tr></thead>
+          <tbody>
+            @foreach($items as $it)
+              <tr>
+                <td>{{ $it->id }}</td>
+                <td>{{ $it->name }}</td>
+                <td class="text-end">
+                  <a href="{{ route('admin.roles.edit', $it) }}" class="btn btn-sm btn-primary">Ред.</a>
+                  <form action="{{ route('admin.roles.destroy', $it) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Удалить?')">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-sm btn-danger">Удал.</button>
+                  </form>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-    {{ $items->links() }}
+    <div class="mt-3">{{ $items->links() }}</div>
   </div>
 @endsection

@@ -169,7 +169,7 @@ return [
          * API security definitions. Will be generated into documentation file.
         */
         'securityDefinitions' => [
-            'securitySchemes' => [
+                'securitySchemes' => [
                 /*
                  * Examples of Security schemes
                  */
@@ -213,6 +213,11 @@ return [
                     'description' => 'Enter token in format (Bearer <token>)',
                     'name' => 'Authorization', // The name of the header or query parameter to be used.
                     'in' => 'header', // The location of the API key. Valid values are "query" or "header".
+                ],
+                'bearerAuth' => [
+                    'type' => 'http',
+                    'scheme' => 'bearer',
+                    'bearerFormat' => 'JWT'
                 ],
                 */
             ],
