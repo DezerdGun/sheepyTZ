@@ -25,3 +25,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
+
+Route::get('/api/health', function () {
+    return response()->json(['status' => 'ok']);
+});

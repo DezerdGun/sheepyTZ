@@ -21,7 +21,8 @@ return [
                 'docs_json' => 'openapi.json',
                 'docs_yaml' => 'openapi.yaml',
                 'annotations' => [
-                    base_path('app'),
+                    base_path('app/Http/Controllers/Api'),
+                    base_path('app/Models'),
                 ],
                 'excludes' => [],
                 'base' => null,
@@ -49,6 +50,6 @@ return [
     ],
 
     'constants' => [
-        // константы можно не использовать, все пути в аннотациях задаем строкой
+        'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://localhost:8081'),
     ],
 ];

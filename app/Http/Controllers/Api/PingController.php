@@ -6,6 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 
 /**
+ * @OA\Info(
+ *     version="1.0.0",
+ *     title="Company Fleet API",
+ *     description="API для служебных автомобилей"
+ * )
+ * @OA\Server(
+ *     url="http://localhost:8080",
+ *     description="Local dev server"
+ * )
  * @OA\Tag(
  *     name="Health",
  *     description="Запросы для проверки состояния API"

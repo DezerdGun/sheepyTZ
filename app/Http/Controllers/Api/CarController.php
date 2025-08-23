@@ -55,7 +55,6 @@ class CarController extends Controller
     {
         $user = Auth::user();
 
-        // ensure the user has a position and allowed categories
         $allowedCategoryIds = $user->position?->categories->pluck('id')->toArray() ?? [];
 
         $query = Car::query()
@@ -64,13 +63,11 @@ class CarController extends Controller
                     $q->whereIn('id', $allowedCategoryIds);
                 }
             })
-            // exclude cars that have bookings overlapping requested interval
             ->whereDoesntHave('bookings', function ($q) use ($request) {
                 if ($request->filled('start_time') && $request->filled('end_time')) {
                     $start = $request->start_time;
                     $end = $request->end_time;
 
-                    // overlap if booking.start < requested_end AND booking.end > requested_start
                     $q->where(function ($qq) use ($start, $end) {
                         $qq->where('start_time', '<', $end)
                            ->where('end_time', '>', $start);

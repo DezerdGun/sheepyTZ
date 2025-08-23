@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8081",
+            "url": "http://localhost:8080",
             "description": "Local dev server"
         }
     ],
@@ -170,20 +170,6 @@
                     }
                 }
             }
-        },
-        "/api/users": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get list of users",
-                "operationId": "566aed8efb436ca506e0ef51a032ecd9",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation"
-                    }
-                }
-            }
         }
     },
     "components": {
@@ -289,7 +275,7 @@
     "tags": [
         {
             "name": "Health",
-            "description": "Health check endpoints"
+            "description": "Запросы для проверки состояния API"
         },
         {
             "name": "Cars",
@@ -298,10 +284,6 @@
         {
             "name": "Categories",
             "description": "Categories"
-        },
-        {
-            "name": "Users",
-            "description": "Users"
         }
     ]
 }
