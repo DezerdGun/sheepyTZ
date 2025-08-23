@@ -16,18 +16,18 @@ class CarController extends Controller
      *     description="Возвращает список машин, доступных текущему пользователю для поездки",
      *     tags={"Cars"},
     *     @OA\Parameter(
-    *         name="model",
+    *         name="model_id",
     *         in="query",
-    *         description="Фильтр по модели авто",
+    *         description="ID модели автомобиля (car_model_id)",
     *         required=false,
-    *         @OA\Schema(type="string")
+    *         @OA\Schema(type="integer", format="int64")
     *     ),
     *     @OA\Parameter(
-    *         name="category",
+    *         name="category_id",
     *         in="query",
-    *         description="Фильтр по категории комфорта",
+    *         description="ID категории комфорта",
     *         required=false,
-    *         @OA\Schema(type="string")
+    *         @OA\Schema(type="integer", format="int64")
     *     ),
     *     @OA\Parameter(
     *         name="start_time",
@@ -55,7 +55,11 @@ class CarController extends Controller
     {
         $user = Auth::user();
 
-        $allowedCategoryIds = $user->position?->categories->pluck('id')->toArray() ?? [];
+        // support unauthenticated requests (e.g. public Swagger Try-it)
+        $allowedCategoryIds = [];
+        if ($user && $user->position) {
+            $allowedCategoryIds = $user->position->categories->pluck('id')->toArray();
+        }
 
         $query = Car::query()
             ->whereHas('carModel.category', function ($q) use ($allowedCategoryIds) {
@@ -75,16 +79,48 @@ class CarController extends Controller
                 }
             });
 
-        if ($request->filled('model')) {
-            $query->whereHas('carModel', function ($q) use ($request) {
-                $q->where('name', 'ILIKE', "%{$request->model}%");
-            });
+        if ($request->filled('model_id')) {
+            $query->where('car_model_id', $request->model_id);
         }
 
-        if ($request->filled('category')) {
-            $query->whereHas('carModel.category', fn($q) => $q->where('name', $request->category));
+        if ($request->filled('category_id')) {
+            $query->whereHas('carModel.category', fn($q) => $q->where('id', $request->category_id));
         }
 
-        return response()->json($query->with(['driver', 'carModel.category'])->get());
+        $cars = $query->with(['driver', 'carModel.category', 'bookings'])->get();
+
+        // evaluate availability per car
+        $start = $request->filled('start_time') ? $request->start_time : null;
+        $end = $request->filled('end_time') ? $request->end_time : null;
+
+        $result = $cars->map(function ($car) use ($start, $end) {
+            $isAvailable = true;
+            $nextAvailable = null;
+
+            if ($start && $end) {
+                // any booking that overlaps requested interval => not available
+                $overlap = $car->bookings->first(function ($b) use ($start, $end) {
+                    return ($b->start_time < $end) && ($b->end_time > $start);
+                });
+
+                if ($overlap) {
+                    $isAvailable = false;
+                    // compute next available time as the latest end_time of bookings overlapping or starting before end
+                    $next = $car->bookings->where('end_time', '>', $start)->sortByDesc('end_time')->first();
+                    $nextAvailable = $next?->end_time?->toIso8601String() ?? null;
+                }
+            }
+
+            $payload = $car->toArray();
+            $payload['available'] = $isAvailable;
+            $payload['next_available_time'] = $nextAvailable;
+
+            // remove bookings from payload to keep response small
+            unset($payload['bookings']);
+
+            return $payload;
+        });
+
+        return response()->json($result->values());
     }
 }

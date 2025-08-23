@@ -5,6 +5,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Position extends Model
 {
+    /**
+     * @OA\Schema(
+     *     schema="Position",
+     *     type="object",
+     *     required={"name"},
+     *     @OA\Property(property="id", type="integer", example=1),
+     *     @OA\Property(property="name", type="string", example="Менеджер"),
+     *     @OA\Property(
+     *         property="categories",
+     *         type="array",
+     *         @OA\Items(ref="#/components/schemas/Category")
+     *     )
+     * )
+     */
     protected $fillable = ['name'];
 
     public function users()

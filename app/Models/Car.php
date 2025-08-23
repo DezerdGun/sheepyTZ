@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  *         property="driver",
  *         ref="#/components/schemas/Driver"
  *     )
+ *     ,@OA\Property(property="available", type="boolean", example=true)
+ *     ,@OA\Property(property="next_available_time", type="string", format="date-time", nullable=true)
  * )
  */
 class Car extends Model

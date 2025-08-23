@@ -56,4 +56,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Booking::class);
     }
+
+    /**
+     * @OA\Schema(
+     *     schema="Employee",
+     *     type="object",
+     *     required={"name","email"},
+     *     @OA\Property(property="id", type="integer", example=1),
+     *     @OA\Property(property="name", type="string", example="Иван Иванов"),
+     *     @OA\Property(property="email", type="string", format="email", example="ivan@example.com"),
+     *     @OA\Property(property="position", ref="#/components/schemas/Position")
+     * )
+     */
 }
