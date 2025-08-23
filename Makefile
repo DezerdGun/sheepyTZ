@@ -35,3 +35,18 @@ composer-%:
 
 artisan-%:
 	docker compose exec app php artisan $*
+
+test-db:
+	docker exec -it db psql -U app -d app -c "CREATE DATABASE onlydigitaltz_test OWNER app;"
+
+migrate-test:
+	docker compose exec app php artisan migrate --env=testingdocker exec -it app php artisan migrate --env=testing
+
+resetdb:
+	php artisan migrate:fresh --seed && php artisan test
+
+	
+
+
+
+

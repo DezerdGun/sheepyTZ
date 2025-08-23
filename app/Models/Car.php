@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * @OA\Schema(
  *     schema="Car",
@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Car extends Model
 {
+    use HasFactory;
     protected $fillable = ['plate_number', 'car_model_id', 'driver_id'];
 
     public function carModel()

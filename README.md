@@ -36,3 +36,16 @@
 | PostgreSQL | `host: localhost`                              | 5432 | Database               |
 | Swagger     | [http://localhost:8081](http://localhost:8081/) | 8081 | Swagger task api     |
 
+## Тестирование (Feature tests)
+
+1. Создайте отдельную тестовую базу данных Postgres (например, onlydigitaltz_test):
+   ```bash
+   psql -U postgres -c "CREATE DATABASE onlydigitaltz_test;"
+   ```
+2. Проверьте/отредактируйте файл `.env.testing` (создан автоматически, если нет — скопируйте из .env и поменяйте DB_DATABASE, DB_USERNAME, DB_PASSWORD на тестовые значения).
+3. Запустите тесты:
+   ```bash
+   php artisan test --testsuite=Feature
+   ```
+   Все тесты будут выполняться на тестовой базе, не затрагивая основную.
+
