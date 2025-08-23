@@ -9,7 +9,7 @@ return [
         'default' => [
 
             'api' => [
-                'title' => env('APP_NAME', 'Laravel') . ' API Documentation',
+                'title' => env('APP_NAME', 'OnlyDigital') . ' API Documentation',
             ],
 
             'routes' => [

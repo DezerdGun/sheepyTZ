@@ -15,9 +15,13 @@
     <div class="d-flex flex-column min-vh-100">
         <header class="border-bottom">
             <div class="container d-flex justify-content-between align-items-center py-3">
-                <a href="/" class="text-decoration-none text-dark"><strong>{{ config('app.name') }}</strong></a>
-                <nav>
-                    <a href="/admin" class="me-2">Admin</a>
+<a href="/" class="text-decoration-none fw-bold fs-4" style="color: #4f46e5;">
+    {{ config('app.name') }}
+</a>
+
+
+                 <nav>
+                    <a href="/admin" class="btn btn-primary">Admin</a>
                 </nav>
             </div>
         </header>
