@@ -54,8 +54,6 @@ class CarController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
-        // support unauthenticated requests (e.g. public Swagger Try-it)
         $allowedCategoryIds = [];
         if ($user && $user->position) {
             $allowedCategoryIds = $user->position->categories->pluck('id')->toArray();
@@ -89,7 +87,6 @@ class CarController extends Controller
 
         $cars = $query->with(['driver', 'carModel.category', 'bookings'])->get();
 
-        // evaluate availability per car
         $start = $request->filled('start_time') ? $request->start_time : null;
         $end = $request->filled('end_time') ? $request->end_time : null;
 
@@ -98,14 +95,12 @@ class CarController extends Controller
             $nextAvailable = null;
 
             if ($start && $end) {
-                // any booking that overlaps requested interval => not available
                 $overlap = $car->bookings->first(function ($b) use ($start, $end) {
                     return ($b->start_time < $end) && ($b->end_time > $start);
                 });
 
                 if ($overlap) {
                     $isAvailable = false;
-                    // compute next available time as the latest end_time of bookings overlapping or starting before end
                     $next = $car->bookings->where('end_time', '>', $start)->sortByDesc('end_time')->first();
                     $nextAvailable = $next?->end_time?->toIso8601String() ?? null;
                 }
@@ -115,7 +110,6 @@ class CarController extends Controller
             $payload['available'] = $isAvailable;
             $payload['next_available_time'] = $nextAvailable;
 
-            // remove bookings from payload to keep response small
             unset($payload['bookings']);
 
             return $payload;

@@ -9,22 +9,15 @@ Route::get('/ping', PingController::class);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::post('/categories', [CategoryController::class, 'store']);
-
-// Register /api/cars. Use auth:sanctum when the guard is configured, otherwise
-// fall back to an unauthenticated route so local/dev Swagger Try-it works.
 if (config('auth.guards.sanctum')) {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/cars', [CarController::class, 'index']);
     });
 } else {
-    // Sanctum guard not available in this environment — register public route
     Route::get('/cars', [CarController::class, 'index']);
 }
-
-// Public testing endpoint (no auth) — useful for Swagger Try-it in local/dev only
 Route::get('/cars-public', [CarController::class, 'index']);
 
-// Bookings endpoints
 if (config('auth.guards.sanctum')) {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/bookings', [\App\Http\Controllers\Api\BookingController::class, 'index']);
@@ -35,7 +28,6 @@ if (config('auth.guards.sanctum')) {
     Route::post('/bookings', [\App\Http\Controllers\Api\BookingController::class, 'store']);
 }
 
-// Users list — show employees
 if (config('auth.guards.sanctum')) {
     Route::middleware('auth:sanctum')->get('/users', [\App\Http\Controllers\Api\UserController::class, 'index']);
 } else {

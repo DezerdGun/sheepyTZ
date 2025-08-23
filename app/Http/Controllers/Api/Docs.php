@@ -2,10 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-/**
- * The file contains additional OA annotations that ensure certain schemas
- * are present in the generated OpenAPI spec.
- */
 class Docs
 {
     /**
@@ -20,7 +16,7 @@ class Docs
      *     @OA\Property(property="position", ref="#/components/schemas/Position")
      * )
      */
-    private function employeeSchema() {}
-
-    // Booking paths are documented on BookingController; avoid duplicate annotations here.
+    private function employeeSchema() {
+        // patom sdelayu
+    }
 }

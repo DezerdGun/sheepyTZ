@@ -56,11 +56,9 @@ class BookingController extends Controller
         $data = $request->only(['user_id', 'car_id', 'start_time', 'end_time']);
 
         if ($user) {
-            // force user_id to authenticated user
             $data['user_id'] = $user->id;
         }
 
-        // If not authenticated, ensure provided user_id exists to avoid FK violation.
         $userIdRule = $user ? 'required|integer' : 'required|integer|exists:users,id';
 
         $validator = Validator::make($data, [
@@ -73,8 +71,6 @@ class BookingController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
-        // check for overlapping bookings for the car
         $start = $data['start_time'];
         $end = $data['end_time'];
 
@@ -90,7 +86,6 @@ class BookingController extends Controller
         try {
             $booking = Booking::create($data);
         } catch (\Illuminate\Database\QueryException $ex) {
-            // Detect FK constraint violations and return a friendly 422
             return response()->json([
                 'message' => 'Failed to create booking: invalid related record or constraint violation',
                 'error' => $ex->getMessage(),

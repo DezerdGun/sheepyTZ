@@ -25,7 +25,6 @@ class CarController extends Controller
 
     public function store(Request $request)
     {
-        // normalize empty driver to null (select may submit empty string)
         if ($request->filled('driver_id') === false) {
             $request->merge(['driver_id' => null]);
         }

@@ -9,7 +9,7 @@ class DriversTableSeeder extends Seeder
 {
     public function run()
     {
-        Driver::firstOrCreate(['name'=>'Иванов Иван','phone'=>'+998901234567']);
-        Driver::firstOrCreate(['name'=>'Петров Петр','phone'=>'+998901234568']);
+        Driver::firstOrCreate(['name'=>'Karis','phone'=>'+998901234567']);
+        Driver::firstOrCreate(['name'=>'Oris','phone'=>'+998901234568']);
     }
 }

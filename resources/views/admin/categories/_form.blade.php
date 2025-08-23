@@ -1,3 +1,4 @@
+
 <form action="{{ $action }}" method="POST">
   @csrf
   @if(in_array(strtoupper($method ?? 'POST'), ['PUT','PATCH','DELETE']))
@@ -10,7 +11,5 @@
     @error('name')<div class="text-danger small">{{ $message }}</div>@enderror
   </div>
 
-</form>
-
-@include('admin._form_actions', ['cancelUrl' => route('admin.categories.index')])
+  @include('admin._form_actions', ['cancelUrl' => route('admin.categories.index')])
 </form>

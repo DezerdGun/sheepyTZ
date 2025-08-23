@@ -13,19 +13,16 @@ class AvailableCarsController extends Controller
 {
     public function index(Request $request)
     {
-    // Load categories and car models for selects
     $categories = Category::orderBy('name')->get();
     $carModels = CarModel::with('category')->orderBy('name')->get();
 
     return view('admin.available_cars', compact('categories', 'carModels'));
     }
 
-    // Return JSON data for the admin UI using session-authenticated user
     public function available(Request $request)
     {
     $user = Auth::user();
 
-    // If unauthenticated, don't restrict by user's position categories (allow all)
     $allowedCategoryIds = $user?->position?->categories->pluck('id')->toArray() ?? [];
 
         $query = Car::query()

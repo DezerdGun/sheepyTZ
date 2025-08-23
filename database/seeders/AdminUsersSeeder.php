@@ -17,14 +17,9 @@ class AdminUsersSeeder extends Seeder
     public function run(): void
     {
         try {
-            // quick connection check
             DB::connection()->getPdo();
-
-            // Create roles if they don't exist
             $superRole = Role::firstOrCreate(['name' => 'superadmin']);
             $adminRole = Role::firstOrCreate(['name' => 'admin']);
-
-            // Create or update Super Admin
             User::updateOrCreate(
                 ['email' => 'superadmin@example.com'],
                 [
@@ -44,8 +39,6 @@ class AdminUsersSeeder extends Seeder
                 ]
             );
         } catch (\Exception $e) {
-            // DB not available in current environment (e.g., running migrations outside container)
-            // Log and skip seeding to avoid breaking deploy/migration flows.
             Log::warning('AdminUsersSeeder skipped: database unavailable - ' . $e->getMessage());
             return;
         }
