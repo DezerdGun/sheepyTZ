@@ -6,6 +6,7 @@
 ## Возможности
 
  **Бэкенд**: Laravel на `http://localhost:8000`  
+ **REST API**: Swagger на `http://localhost:8081` 
  **База данных**: PostgreSQL с сохранением данных  
 
 ## Требования
