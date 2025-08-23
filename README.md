@@ -34,5 +34,5 @@
 |------------|------------------------------------------------|------|------------------------|
 | Backend    | [http://localhost:8000](http://localhost:8000) | 8000 | Laravel                |
 | PostgreSQL | `host: localhost`                              | 5432 | Database               |
-| Swagger     | [http://localhost:8081](http://localhost:8081/) | 8001 | Swagger task api     |
+| Swagger     | [http://localhost:8081](http://localhost:8081/) | 8081 | Swagger task api     |
 
