@@ -1,4 +1,4 @@
-# OnlyDigital - МДоступные служебные автомобили
+# OnlyDigital - Доступные служебные автомобили
 
 **Docker-приложение на Laravel и PostgreSQL**
 
