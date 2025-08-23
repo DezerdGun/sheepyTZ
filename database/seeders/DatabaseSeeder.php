@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             \Database\Seeders\CarModelsTableSeeder::class,
             \Database\Seeders\DriversTableSeeder::class,
             \Database\Seeders\CarsTableSeeder::class,
+            \Database\Seeders\AdminUsersSeeder::class,
         ]);
     }
 }

@@ -24,4 +24,22 @@ if (config('auth.guards.sanctum')) {
 // Public testing endpoint (no auth) — useful for Swagger Try-it in local/dev only
 Route::get('/cars-public', [CarController::class, 'index']);
 
+// Bookings endpoints
+if (config('auth.guards.sanctum')) {
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/bookings', [\App\Http\Controllers\Api\BookingController::class, 'index']);
+        Route::post('/bookings', [\App\Http\Controllers\Api\BookingController::class, 'store']);
+    });
+} else {
+    Route::get('/bookings', [\App\Http\Controllers\Api\BookingController::class, 'index']);
+    Route::post('/bookings', [\App\Http\Controllers\Api\BookingController::class, 'store']);
+}
+
+// Users list — show employees
+if (config('auth.guards.sanctum')) {
+    Route::middleware('auth:sanctum')->get('/users', [\App\Http\Controllers\Api\UserController::class, 'index']);
+} else {
+    Route::get('/users', [\App\Http\Controllers\Api\UserController::class, 'index']);
+}
+
 // Route::get('/available-cars', [CarController::class, 'available']);

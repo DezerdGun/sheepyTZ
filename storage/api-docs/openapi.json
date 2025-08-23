@@ -12,6 +12,62 @@
         }
     ],
     "paths": {
+        "/api/bookings": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Получить список броней",
+                "operationId": "4535e967ef15bc76dadf1efa40192f0d",
+                "responses": {
+                    "200": {
+                        "description": "Список броней",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Booking"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Создать бронь",
+                "operationId": "43e6dcca842886074084b8db86af7802",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Booking"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Бронь создана",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Booking"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Conflict or validation error"
+                    }
+                }
+            }
+        },
         "/api/cars": {
             "get": {
                 "tags": [
@@ -172,10 +228,55 @@
                     }
                 }
             }
+        },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Список сотрудников",
+                "operationId": "566aed8efb436ca506e0ef51a032ecd9",
+                "responses": {
+                    "200": {
+                        "description": "Список сотрудников",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Employee"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
         "schemas": {
+            "Employee": {
+                "properties": {
+                    "id": {
+                        "description": "Employee schema (explicit) so Swagger shows who makes requests",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Иван Иванов"
+                    },
+                    "position_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "position": {
+                        "$ref": "#/components/schemas/Position"
+                    }
+                },
+                "type": "object"
+            },
             "Booking": {
                 "required": [
                     "user_id",
@@ -344,12 +445,20 @@
             "description": "Запросы для проверки состояния API"
         },
         {
+            "name": "Bookings",
+            "description": "Bookings"
+        },
+        {
             "name": "Cars",
             "description": "Cars"
         },
         {
             "name": "Categories",
             "description": "Categories"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
         }
     ]
 }
