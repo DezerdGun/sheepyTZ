@@ -2,27 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
+    public function run()
     {
-        User::firstOrCreate(
-            ['email' => 'test@example.com'],
-            ['name' => 'Test User', 'password' => bcrypt('password')]
-        );
-
-        $this->call([
-            \Database\Seeders\CategoriesTableSeeder::class,
-            \Database\Seeders\CarModelsTableSeeder::class,
-            \Database\Seeders\DriversTableSeeder::class,
-            \Database\Seeders\CarsTableSeeder::class,
-            \Database\Seeders\AdminUsersSeeder::class,
-        ]);
+        // Вызываем другие seeders, например:
+        // $this->call(UserSeeder::class);
     }
 }
+
+

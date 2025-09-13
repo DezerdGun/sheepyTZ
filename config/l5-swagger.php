@@ -23,6 +23,7 @@ return [
                 'annotations' => [
                     base_path('app/Http/Controllers/Api'),
                     base_path('app/Models'),
+                    base_path('app/Swagger'),
                 ],
                 'excludes' => [],
                 'base' => null,
@@ -50,6 +51,6 @@ return [
     ],
 
     'constants' => [
-        'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://localhost:8081'),
+        'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://localhost:8080'),
     ],
 ];

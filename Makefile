@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 up:
-	docker compose up -d --build
+	docker compose up --build
 
 down:
 	docker compose down
@@ -37,7 +37,7 @@ artisan-%:
 	docker compose exec app php artisan $*
 
 test-db:
-	docker exec -it db psql -U app -d app -c "CREATE DATABASE onlydigitaltz_test OWNER app;"
+	docker exec -it db psql -U app -d app -c "CREATE DATABASE test OWNER app;"
 
 migrate-test:
 	docker compose exec app php artisan migrate --env=testingdocker exec -it app php artisan migrate --env=testing

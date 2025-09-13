@@ -12,11 +12,12 @@ use OpenApi\Annotations as OA;
  * )
  *
  * @OA\Server(
- *     url="http://localhost:8081",
+ *     url="http://localhost:8080",
  *     description="Local dev server"
  * )
  */
 class OpenApi
 {
-    
+
 }
+
