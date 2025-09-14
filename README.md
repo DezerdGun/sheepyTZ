@@ -1,109 +1,111 @@
-# SheepyTZ
+# sheepyTZ
 
-Docker-приложение на **Laravel**, с поддержкой **MySQL**, **Redis**, **Swagger** и **phpMyAdmin**.
-
----
-
-##  Возможности
-
-- **Бэкенд:** Laravel на `http://localhost:8080`
-- **REST API:** Swagger UI на `http://localhost:8081`
-- **База данных:** MySQL 8 с сохранением данных
-- **Админка:** phpMyAdmin на `http://localhost:8082/ `.. `http://localhost:${PMA_PORT}`  
-- **Кэш:** Redis 7 для очередей и сессий
+A Dockerized Laravel application with MySQL, Redis, Swagger, and phpMyAdmin support.
 
 ---
 
-##  Требования
+## Features
+
+- **Backend:** Laravel API at `http://localhost:8080`
+- **REST API Docs:** Swagger UI at `http://localhost:8081`
+- **Database:** MySQL 8 with persistent storage
+- **Admin Interface:** phpMyAdmin at `http://localhost:8082` .. `http://localhost:${PMA_PORT}`
+- **Caching:** Redis 7 for queues and sessions
+
+---
+
+## Requirements
 
 - Docker & Docker Compose
-- Make (для удобных команд)
-- PHP 8.2+, Composer (для локальных команд)
-- Node.js (если нужен фронтенд)
+- Make (for convenient commands)
+- PHP 8.2+, Composer (for local commands)
+- Node.js (if frontend is needed)
 
 ---
 
-##  Установка и запуск
+## Installation & Setup
 
-1. Клонируйте репозиторий:
+1. Clone the repository:
    ```bash
    git clone https://github.com/your-repo/sheepyTZ
    cd sheepyTZ
    cp .env.example .env
    ```
 
-2. Соберите и запустите контейнеры:
+2. Start containers:
    ```bash
    make up
    ```
 
-3. Установите зависимости Laravel:
+3. Install Laravel dependencies:
    ```bash
    docker compose exec app composer install
    docker compose exec app php artisan key:generate
    docker compose exec app php artisan migrate --seed
    ```
 
-4. (Опционально) Установите npm-зависимости и соберите фронтенд:
+4. (Optional) Install and build frontend:
    ```bash
    docker compose exec app npm install
    docker compose exec app npm run build
    ```
 
-###  Остановка контейнеров
-```bash
-make down
-```
+5. Stop containers:
+   ```bash
+   make down
+   ```
 
 ---
 
-## 🔧 Основные сервисы
+## Key Services
 
-| Сервис       | URL / Хост                | Порт         | Описание              |
-|--------------|---------------------------|--------------|-----------------------|
-| Backend      | http://localhost:8080     | 8080         | Laravel API           |
-| MySQL        | host: localhost           | 3306         | База данных MySQL     |
-| Swagger      | http://localhost:8081     | 8081         | Документация API      |
-| phpMyAdmin   | http://localhost:${PMA_PORT} | ${PMA_PORT} | Веб-интерфейс БД      |
-| Redis        | localhost:6379            | 6379         | Кэш / Очереди         |
+| Service       | URL / Host                | Port         | Description          |
+|---------------|---------------------------|--------------|----------------------|
+| Backend       | http://localhost:8080     | 8080         | Laravel API          |
+| MySQL         | localhost                 | 3306         | Database             |
+| Swagger       | http://localhost:8081     | 8081         | API Documentation    |
+| phpMyAdmin    | http://localhost:${PMA_PORT} | ${PMA_PORT} | Database UI          |
+| Redis         | localhost:6379            | 6379         | Cache / Queues       |
 
 ---
 
-##  Тестирование (Feature tests)
+## Testing (Feature Tests)
 
-1. Создайте тестовую базу:
+1. Create a test database:
    ```bash
    docker compose exec db mysql -u root -p -e "CREATE DATABASE sheepyTZ_test;"
    ```
 
-2. Скопируйте `.env` в `.env.testing` и укажите тестовую базу:
+2. Copy `.env` to `.env.testing` and set:
    ```bash
-   DB_DATABASE=sheepytz_test
+   DB_DATABASE=sheepyTZ_test
    ```
 
-3. Запустите тесты:
+3. Run tests:
    ```bash
    docker compose exec app php artisan test --testsuite=Feature
    ```
 
-Все тесты выполняются на тестовой базе и не затрагивают рабочие данные.
+Tests run on the test database and do not affect production data.
 
 ---
 
-##  Полезные команды
+## Useful Commands
 
-| Команда                                      | Описание                          |
-|----------------------------------------------|-----------------------------------|
-| `make up`                                    | Сборка и запуск контейнеров       |
-| `make down`                                  | Остановка контейнеров             |
-| `make restart`                               | Перезапуск контейнеров            |
-| `docker compose logs -f`                     | Просмотр логов                    |
-| `docker compose exec app php artisan migrate` | Прогнать миграции                 |
-| `docker compose exec app composer dump-autoload` | Обновить автозагрузку         |
+| Command                                      | Description                  |
+|----------------------------------------------|------------------------------|
+| `make up`                                    | Start containers             |
+| `make down`                                  | Stop containers              |
+| `make logs`                                  | View logs (last 200 lines)   |
+| `make migrate`                               | Run migrations               |
+| `make test-db`                               | Create test database         |
+| `make help`                               | All list commands       |
+
+See `Makefile` for more commands (e.g., `artisan-`, `composer-`).
 
 ---
 
-##  Структура проекта
+## Project Structure
 
 ```
 .docker/
@@ -115,23 +117,22 @@ make down
 docker-compose.yml
 .env.example
 Makefile
-src/
   ...
 ```
 
 ---
 
-##  Примечания
+## Notes
 
-- Переменные окружения хранятся в `.env` (DB, Redis, Swagger, phpMyAdmin).
-- Контейнеры связаны одной сетью `laravel`.
-- Для быстрой сборки и удобных команд рекомендуется использовать `make`.
+- Environment variables are in `.env` (DB, Redis, Swagger, phpMyAdmin).
+- Containers use the `laravel` network.
+- Use `make` for quick setup and commands.
 
 ---
 
-##  Готово!
+## Ready!
 
-Теперь проект доступен по адресам:
+Access the project at:
 
 - 🔗 http://localhost:8080 – Laravel
 - 🔗 http://localhost:8081 – Swagger UI
@@ -139,37 +140,10 @@ src/
 
 ---
 
-##  Makefile
+### Key Improvements:
+1. **Conciseness:** Removed redundant sections (e.g., duplicate Makefile content) and streamlined instructions.
+2. **Clarity:** Organized content with clear headings and tables, making it easier to navigate.
+3. **Consistency:** Aligned command examples with the provided `Makefile`.
+4. **Professional Tone:** Simplified language and removed overly detailed explanations unless critical.
 
-```makefile
-# Запуск контейнеров
-up:
-	@docker compose up -d
-
-# Остановка контейнеров
-down:
-	@docker compose down
-
-# Перезапуск контейнеров
-restart:
-	@docker compose down && docker compose up -d
-
-# Просмотр логов
-logs:
-	@docker compose logs -f
-
-# Установка зависимостей
-install:
-	@docker compose exec app composer install
-	@docker compose exec app php artisan key:generate
-	@docker compose exec app php artisan migrate --seed
-
-# Установка npm-зависимостей и сборка фронтенда
-frontend:
-	@docker compose exec app npm install
-	@docker compose exec app npm run build
-
-# Запуск тестов
-test:
-	@docker compose exec app php artisan test --testsuite=Feature
-```
+You can copy this text into your `README.md` and adjust the repository URL or other specifics as needed. Let me know if you'd like further refinements!
