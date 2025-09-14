@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TaskNotification extends Model
 {
     use HasFactory;
-
+    public $timestamps = false;
     protected $fillable = [
         'task_id',
         'user_id',
