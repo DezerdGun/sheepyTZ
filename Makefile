@@ -45,6 +45,13 @@ migrate-test:
 resetdb:
 	php artisan migrate:fresh --seed && php artisan test
 
+check-overdue-dry:
+	docker compose exec $(APP_CONTAINER) php artisan tasks:check-overdue --dry-run
+	
+check-overdue:
+	docker compose exec $(APP_CONTAINER) php artisan tasks:check-overdue
+
+
 	
 
 
