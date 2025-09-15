@@ -1,11 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 
-Route::get('/admin', function () {
-    return view('admin.dashboard');
-});
-
-Route::get('/api/health', function () {
-    return response()->json(['status' => 'ok']);
-});
+Route::get('/', [AdminController::class, 'dashboard']);
+Route::get('/api/health', [AdminController::class, 'health']);

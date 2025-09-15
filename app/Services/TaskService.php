@@ -59,30 +59,26 @@ class TaskService
         return $task;
     }
 
-public function addComment(int $taskId, array $data): TaskComment
-{
-    $task = Task::find($taskId);
-    if (!$task) {
-        throw new ModelNotFoundException("Task not found");
-    }
-    if ($task->status === 'cancelled') {
-        throw new InvalidArgumentException('Cannot add comment to cancelled task');
-    }
-    try {
+    public function addComment(int $taskId, array $data): TaskComment
+    {
+        $task = Task::find($taskId);
+        if (!$task) {
+            throw new ModelNotFoundException("Task not found");
+        }
+
+        if ($task->status === 'cancelled') {
+            throw new InvalidArgumentException('Cannot add comment to cancelled task');
+        }
+
         return TaskComment::create([
             'task_id' => $task->id,
             'user_id' => $data['user_id'],
             'comment' => $data['comment'],
             'created_at' => now(),
         ]);
-    } catch (\Exception $e) {
-        \Log::error('Failed to create TaskComment: ' . $e->getMessage(), [
-            'task_id' => $taskId,
-            'data' => $data,
-        ]);
-        throw $e;
     }
-}
+
+
     public function getTaskWithRelations(int $taskId): Task
     {
         return Task::with([
