@@ -1,10 +1,12 @@
-name: Laravel CI/CD
+name: SheepyTZ CI/CD Pipeline
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
   pull_request:
-    branches: [master]
+    branches:
+      - master
 
 jobs:
   build-and-test:
@@ -13,8 +15,10 @@ jobs:
       mysql:
         image: mysql:8
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test_db
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
+          MYSQL_USER: ${{ secrets.DB_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
           - 3306:3306
         options: >-
@@ -39,7 +43,7 @@ jobs:
           extensions: mbstring, bcmath, mysqli, redis
           coverage: xdebug
 
-      - name: Set up Composer
+      - name: Install Composer dependencies
         run: composer install --no-progress --no-suggest --prefer-dist
 
       - name: Copy .env
@@ -53,9 +57,9 @@ jobs:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
-          DB_DATABASE: test_db
-          DB_USERNAME: root
-          DB_PASSWORD: root
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: php artisan migrate --force
 
       - name: Run tests
@@ -63,9 +67,9 @@ jobs:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
-          DB_DATABASE: test_db
-          DB_USERNAME: root
-          DB_PASSWORD: root
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: php artisan test --no-interaction
 
   deploy:
