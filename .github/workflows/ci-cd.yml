@@ -1,4 +1,4 @@
-name: Sheepy Laravel CI/CD
+name: Laravel CI/CD
 
 on:
   push:
@@ -66,9 +66,9 @@ jobs:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_DATABASE: test
+          DB_USERNAME: test
+          DB_PASSWORD: test
         run: php artisan migrate --force
 
       - name: Run tests
@@ -76,9 +76,9 @@ jobs:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_DATABASE: test
+          DB_USERNAME: test
+          DB_PASSWORD: test
         run: php artisan test --no-interaction
 
   deploy:
