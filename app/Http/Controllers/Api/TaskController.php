@@ -3,15 +3,20 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use OpenApi\Annotations as OA;
-use Illuminate\Http\Request;
 use App\Models\Task;
-use App\Models\User;
-use App\Models\TaskComment;
-use App\Jobs\SendTaskNotificationJob;
+use App\Services\TaskService;
+use App\Http\Requests\TaskIndexRequest;
+use App\Filters\TaskFilter;
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\AddTaskCommentRequest;
+use App\Http\Requests\UpdateTaskStatusRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TaskController extends Controller
 {
+    public function __construct(private TaskService $taskService) {}
+
+
     /**
      * @OA\Get(
      *     path="/api/tasks",
@@ -48,25 +53,15 @@ class TaskController extends Controller
      *     @OA\Response(response=400, description="Некорректный запрос")
      * )
      */
-    public function index(Request $request)
+
+    public function index(TaskIndexRequest $request, TaskFilter $filter): JsonResponse
     {
-        $query = Task::query();
+        $tasks = $filter
+            ->apply(Task::query(), $request->validated())
+            ->latest()
+            ->get();
 
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->has('priority')) {
-            $query->where('priority', $request->priority);
-        }
-
-        if ($request->has('user_id')) {
-            $query->where('user_id', $request->user_id);
-        }
-
-        $tasks = $query->orderBy('created_at', 'desc')->get();
-
-        return response()->json($tasks, 200);
+        return response()->json($tasks);
     }
 
 
@@ -95,37 +90,9 @@ class TaskController extends Controller
      *     @OA\Response(response=422, description="Ошибка валидации")
      * )
      */
-  public function store(Request $request)
+    public function store(StoreTaskRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'required|string|min:5|max:100',
-            'description' => 'nullable|string',
-            'user_id' => 'nullable|integer|exists:users,id',
-            'priority' => 'nullable|string|in:high,normal,low',
-        ]);
-
-        $user = null;
-        if (!empty($validated['user_id'])) {
-            $user = User::find($validated['user_id']);
-        }
-        if (!$user) {
-            $user = User::where('position', 'manager')->first();
-        }
-
-        $status = ($validated['priority'] ?? 'normal') === 'high' ? 'in_progress' : 'new';
-
-        $task = Task::create([
-            'title' => $validated['title'],
-            'description' => $validated['description'] ?? null,
-            'user_id' => $user->id,
-            'priority' => $validated['priority'] ?? 'normal',
-            'status' => $status,
-        ]);
-
-        if ($task->priority === 'high') {
-            SendTaskNotificationJob::dispatch($task->id, 'task_assigned');
-        }
-
+        $task = $this->taskService->createTask($request->validated());
         return response()->json($task, 201);
     }
 
@@ -133,7 +100,7 @@ class TaskController extends Controller
      * @OA\Put(
      *     path="/api/tasks/{id}/status",
      *     summary="Изменить статус задачи",
-     *     description="Изменение статуса задачи. При смене статуса на completed автоматически добавляется комментарий. Также запускается job уведомлений.",
+     *     description="Изменение статуса задачи. При смене статуса на completed автоматически добавляется комментарий. Также запускается job уведомлений для всех менеджеров.",
      *     operationId="updateTaskStatus",
      *     tags={"Tasks"},
      *     @OA\Parameter(
@@ -160,36 +127,20 @@ class TaskController extends Controller
      *     @OA\Response(response=422, description="Ошибка валидации")
      * )
      */
-  public function updateStatus(Request $request, $id)
+
+
+    public function updateStatus(UpdateTaskStatusRequest $request, int $id): JsonResponse
     {
-        $task = Task::find($id);
-        if (!$task) {
+        try {
+            $task = $this->taskService->updateStatus($id, $request->validated());
+        } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'Task not found'], 404);
         }
 
-        $validated = $request->validate([
-            'status' => 'required|string|in:new,in_progress,completed,cancelled',
-            'user_id' => 'nullable|integer|exists:users,id',
-        ]);
-
-        $task->status = $validated['status'];
-        $task->save();
-
-        if ($validated['status'] === 'completed') {
-            $user = $validated['user_id'] ? User::find($validated['user_id']) : null;
-            $userName = $user ? $user->name : 'Unknown';
-
-            TaskComment::create([
-                'task_id' => $task->id,
-                'user_id' => $user ? $user->id : $task->user_id,
-                'comment' => "Task completed by {$userName}",
-            ]);
-        }
-
-        SendTaskNotificationJob::dispatch($task->id, 'status_changed');
-
         return response()->json($task, 200);
     }
+
+
 
     /**
      * @OA\Post(
@@ -231,30 +182,25 @@ class TaskController extends Controller
      *     )
      * )
      */
-   public function addComment(Request $request, $id)
+
+
+  
+    public function addComment(AddTaskCommentRequest $request, $id): JsonResponse
     {
-        $validated = $request->validate([
-            'comment' => 'required|string|min:3',
-            'user_id' => 'required|exists:users,id',
-        ]);
-
-        $task = Task::find($id);
-        if (!$task) {
+        try {
+            $comment = $this->taskService->addComment($id, $request->validated());
+        } catch (ModelNotFoundException) {
             return response()->json(['message' => 'Task not found'], 404);
+        } catch (InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], 400); 
         }
 
-        if ($task->status === 'cancelled') {
-            return response()->json(['message' => 'Cannot add comment to a cancelled task'], 422);
-        }
-
-        $comment = TaskComment::create([
-            'task_id' => $task->id,
-            'user_id' => $validated['user_id'],
-            'comment' => $validated['comment'],
-        ]);
-
-        return response()->json($comment, 201);
+        return response()->json($comment->toArray(), 201); 
     }
+
+
+
+
 
     /**
      * @OA\Get(
@@ -280,17 +226,16 @@ class TaskController extends Controller
      *     )
      * )
      */
-    public function show($id)
-    {
-        $task = Task::with([
-            'user:id,name,position',
-            'comments.user:id,name,position'
-        ])->find($id);
 
-        if (!$task) {
+    public function show(int $id): JsonResponse
+    {
+        try {
+            $task = $this->taskService->getTaskWithRelations($id);
+        } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'Task not found'], 404);
         }
 
         return response()->json($task, 200);
     }
+
 }

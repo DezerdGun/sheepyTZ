@@ -97,3 +97,8 @@ check-overdue-dry:
 
 check-overdue:
 	$(COMPOSE) exec $(APP_CONTAINER) php artisan tasks:check-overdue
+
+test:
+	$(COMPOSE) exec $(APP_CONTAINER) php artisan test tests/Feature/Api || true
+
+

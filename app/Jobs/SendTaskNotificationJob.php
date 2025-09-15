@@ -32,6 +32,19 @@ class SendTaskNotificationJob implements ShouldQueue
     }
 
     /**
+     * Getters for testing
+     */
+    public function getTaskId(): int
+    {
+        return $this->taskId;
+    }
+
+    public function getNotificationType(): string
+    {
+        return $this->notificationType;
+    }
+
+    /**
      * Execute the job.
      *
      * @return void
@@ -45,11 +58,9 @@ class SendTaskNotificationJob implements ShouldQueue
             return;
         }
 
-
         $managers = User::where('position', 'manager')->get();
 
         foreach ($managers as $manager) {
-     
             TaskNotification::create([
                 'task_id' => $task->id,
                 'user_id' => $manager->id,
@@ -60,7 +71,9 @@ class SendTaskNotificationJob implements ShouldQueue
         }
     }
 
- 
+    /**
+     * Generate notification message
+     */
     protected function generateMessage(Task $task): string
     {
         return match ($this->notificationType) {

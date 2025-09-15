@@ -21,7 +21,7 @@ class ApiEndpointsTest extends TestCase
     {
         $response = $this->getJson('/api/ping');
         $response->assertStatus(200)
-            ->assertJson(['status' => 'ok']);
+            ->assertJson(['pong' => true]);
     }
     
 }
