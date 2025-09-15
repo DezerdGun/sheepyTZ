@@ -1,12 +1,10 @@
-name: SheepyTZ CI/CD Pipeline
+name: Laravel CI/CD
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   pull_request:
-    branches:
-      - master
+    branches: [master]
 
 jobs:
   build-and-test:
@@ -22,10 +20,10 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping --silent"
+          --health-cmd="mysqladmin ping -h localhost -p${{ secrets.DB_PASSWORD }} --silent"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=3
+          --health-retries=10
 
       redis:
         image: redis:7
@@ -51,6 +49,17 @@ jobs:
 
       - name: Generate APP key
         run: php artisan key:generate
+
+      - name: Wait for MySQL to be ready
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h127.0.0.1 -P3306 -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} > /dev/null 2>&1; then
+              echo "MySQL is up!"
+              break
+            fi
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
 
       - name: Run migrations
         env:
