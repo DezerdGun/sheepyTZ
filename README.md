@@ -64,7 +64,7 @@ A Dockerized Laravel application with MySQL, Redis, Swagger, and phpMyAdmin supp
 | Backend       | http://localhost:8080     | 8080         | Laravel API          |
 | MySQL         | localhost                 | 3306         | Database             |
 | Swagger       | http://localhost:8081     | 8081         | API Documentation    |
-| phpMyAdmin    | http://localhost:${PMA_PORT} | ${PMA_PORT} | Database UI          |
+| phpMyAdmin    | http://localhost:8082     | 8082         | Database UI          |
 | Redis         | localhost:6379            | 6379         | Cache / Queues       |
 
 ---
@@ -83,7 +83,7 @@ A Dockerized Laravel application with MySQL, Redis, Swagger, and phpMyAdmin supp
 
 3. Run tests:
    ```bash
-   docker compose exec app php artisan test --testsuite=Feature
+   docker compose exec app php artisan test --testsuite=Feature 
    ```
 
 Tests run on the test database and do not affect production data.
@@ -99,7 +99,8 @@ Tests run on the test database and do not affect production data.
 | `make logs`                                  | View logs (last 200 lines)   |
 | `make migrate`                               | Run migrations               |
 | `make test-db`                               | Create test database         |
-| `make help`                               | All list commands       |
+| `make help`                                  | All list commands            |
+| `make test`                                  | Run test           |
 
 See `Makefile` for more commands (e.g., `artisan-`, `composer-`).
 
